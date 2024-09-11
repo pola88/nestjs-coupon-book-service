@@ -1,7 +1,6 @@
 import { Column, Table, Model, BelongsTo, ForeignKey, DataType, Is } from 'sequelize-typescript';
 
 import { Coupon } from './coupon.entity';
-import { CodeLength } from '../dto/code-length';
 
 @Table({
   tableName: 'codes',

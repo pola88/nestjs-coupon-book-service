@@ -1,7 +1,7 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { CouponsService } from './coupons.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
-import { UpdateCouponDto } from './dto/update-coupon.dto';
+import { AssignRandomCodeDto } from './dto/assign-random-code.dto';
 import { CreateCodesDto } from './dto/create-codes.dto';
 
 @Controller('coupons')
@@ -26,6 +26,12 @@ export class CouponsController {
 
     return this.couponsService.createRandomCodes(coupon, createCodesDto.amount);
   }
+
+  @Post("assign")
+  async assignRandom(@Body() assignRandomCodeDto: AssignRandomCodeDto) {
+    return this.couponsService.assignRandomCode(assignRandomCodeDto.username);
+  }
+
   @Get()
   findAll() {
     return this.couponsService.findAll();
@@ -36,13 +42,13 @@ export class CouponsController {
     return this.couponsService.findOne(+id);
   }
 
-  @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCouponDto: UpdateCouponDto) {
-    return this.couponsService.update(+id, updateCouponDto);
-  }
+  // @Patch(':id')
+  // update(@Param('id') id: string, @Body() updateCouponDto: UpdateCouponDto) {
+  //   return this.couponsService.update(+id, updateCouponDto);
+  // }
 
-  @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.couponsService.remove(+id);
-  }
+  // @Delete(':id')
+  // remove(@Param('id') id: string) {
+  //   return this.couponsService.remove(+id);
+  // }
 }

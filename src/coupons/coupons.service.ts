@@ -30,6 +30,10 @@ export class CouponsService {
     return this.couponRepository.findByPk(id, options);
   }
 
+  assignRandomCode(username: string) {
+
+  }
+
   @Transactional()
   async setCodes(coupon: Coupon, codes: string[]) {
     try {
