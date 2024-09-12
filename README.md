@@ -10,8 +10,8 @@ I created an endpoint to create users with the same password for testing purpose
 
 The following endpoints are avaiable:
 
-| METHOD + PATH | Body | Description |
-|: --- | --- | --- |
+| METHOD PATH | Body | Description |
+| --- | --- | --- |
 | POST /auth/login | `{"email": "", "password": ""}` | Log in into the system, the request return a token to be used in the header |
 | POST /users | `{"email": ""}` | Create a new user with the same password (12345678) |
 | GET /users/:id | - | Get the user information with the user codes |
