@@ -1,5 +1,5 @@
-import { ValidationError } from "sequelize";
+import { ValidationError } from 'sequelize';
 
 export const parseSequelizeError = (error: ValidationError) => {
-  return error.errors.map( item => item.message) ;
-}
+  return error.errors.map((item) => item.message);
+};

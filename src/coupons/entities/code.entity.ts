@@ -1,4 +1,14 @@
-import { Column, Table, Model, BelongsTo, ForeignKey, DataType, Is, BelongsToMany, IsDate, Default } from 'sequelize-typescript';
+import {
+  Column,
+  Table,
+  Model,
+  BelongsTo,
+  ForeignKey,
+  DataType,
+  Is,
+  IsDate,
+  Default,
+} from 'sequelize-typescript';
 
 import { Coupon } from './coupon.entity';
 import { User } from 'src/users/entities/user.entity';
@@ -7,8 +17,7 @@ import { User } from 'src/users/entities/user.entity';
   tableName: 'codes',
 })
 export class Code extends Model {
-
-  @Is("CodeLength", value => {
+  @Is('CodeLength', (value) => {
     if (value.length !== 5) {
       throw new Error('Invalid code size (size: 5)');
     }
@@ -45,7 +54,7 @@ export class Code extends Model {
   loockedUntil: Date;
 
   async canBeRedeemed() {
-    const coupon = this.coupon && await this.$get("coupon");
+    const coupon = this.coupon && (await this.$get('coupon'));
     return this.redeemed < coupon.redeemedAmount;
   }
 }

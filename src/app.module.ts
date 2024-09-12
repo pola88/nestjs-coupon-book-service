@@ -15,7 +15,7 @@ import { SequelizeTransactionalModule } from 'sequelize-transactional-decorator'
     UsersModule,
     CouponsModule,
     SequelizeModule.forRoot(dataBaseConfig),
-    SequelizeTransactionalModule.register()
+    SequelizeTransactionalModule.register(),
   ],
   controllers: [AppController],
   providers: [AppService],

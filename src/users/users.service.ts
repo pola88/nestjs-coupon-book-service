@@ -1,10 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import { instanceToPlain } from 'class-transformer';
 
 import { User } from './entities/user.entity';
 import { Code } from 'src/coupons/entities/Code.entity';
-
 
 @Injectable()
 export class UsersService {
@@ -13,7 +11,6 @@ export class UsersService {
     private userRepository: typeof User,
   ) {}
 
-
   async findOne(email: string): Promise<User | undefined> {
     return this.userRepository.findOne({ where: { email } });
   }
@@ -21,8 +18,9 @@ export class UsersService {
   create(email: string) {
     const password = User.generatePassword('12345678');
     return this.userRepository.create({
-      email, password,
-    })
+      email,
+      password,
+    });
   }
 
   findUserWithCodes(id: number) {

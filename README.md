@@ -69,6 +69,7 @@ $ npm run test:cov
   The are some package to do it with decoratores as [nestjs-simple-redis-lock](https://github.com/hanFengSan/nestjs-simple-redis-lock)
 - [ ] Remove some params on the user response, for example, password. I tried to use `class-transformer`but I got an error that it's supposed to be fixed
 - [ ] Add pagination to GET /coupons
+- [ ] Missing unit tests
 
 ## License
 

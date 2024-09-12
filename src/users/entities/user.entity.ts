@@ -1,3 +1,4 @@
+// eslint-disable-next-line @typescript-eslint/no-require-imports
 const bcrypt = require('bcrypt');
 
 import { Column, Table, Model, Unique, HasMany } from 'sequelize-typescript';
@@ -11,7 +12,6 @@ const saltRounds = 10;
   tableName: 'users',
 })
 export class User extends Model {
-
   @Unique
   @Column
   email: string;
