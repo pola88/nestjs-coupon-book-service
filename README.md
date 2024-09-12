@@ -65,8 +65,7 @@ $ npm run test:cov
 
 ## TODO List
 
-- [ ] Lock code to prevent the code to be assigned or redeem at the same time for different users or being redeem twice for the same user. The idea should be use redis to block when a valid request is done to assign or redeem a code. I choosed redis for the ability to read and write fast and we can set an expiration time.
-  The are some package to do it with decoratores as [nestjs-simple-redis-lock](https://github.com/hanFengSan/nestjs-simple-redis-lock)
+- [ ] Fix [nestjs-simple-redis-lock](https://github.com/hanFengSan/nestjs-simple-redis-lock). I have an error that it seems from the package. [Issue](https://github.com/hanFengSan/nestjs-simple-redis-lock/issues/6)
 - [ ] Remove some params on the user response, for example, password. I tried to use `class-transformer`but I got an error that it's supposed to be fixed
 - [ ] Add pagination to GET /coupons
 - [ ] Missing unit tests
