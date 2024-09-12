@@ -4,6 +4,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
 import { Transactional } from 'sequelize-transactional-decorator';
 import { Sequelize, ValidationError, Op } from 'sequelize';
+// import { RedisLockService, RedisLock } from 'nestjs-simple-redis-lock';
 
 import { parseSequelizeError } from 'src/helper/error';
 import { Coupon } from './entities/coupon.entity';
@@ -18,6 +19,7 @@ export class CouponsService {
     private couponRepository: typeof Coupon,
     @InjectModel(Code)
     private codeRepository: typeof Code,
+    // protected readonly lockService: RedisLockService,
   ) {}
 
   create(createCouponDto: CreateCouponDto) {
@@ -49,6 +51,7 @@ export class CouponsService {
     await user.$add('code', code);
   }
 
+  // @RedisLock((target, code) => `assignCode_${code}`)
   async assignCode(code: string, user: User) {
     const _code = await this.codeRepository.findOne({
       where: {
@@ -88,6 +91,7 @@ export class CouponsService {
     await _code.save();
   }
 
+  // @RedisLock((target, code) => `redeemCode_${code}`)
   async redeemCode(code: string, user: User) {
     const _code = await this.codeRepository.findOne({
       where: {
