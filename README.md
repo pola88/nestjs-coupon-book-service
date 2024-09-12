@@ -70,6 +70,7 @@ $ npm run test:cov
 - [ ] Remove some params on the user response, for example, password. I tried to use `class-transformer`but I got an error that it's supposed to be fixed
 - [ ] Add pagination to GET /coupons
 - [ ] Missing unit tests
+- [ ] I am getting the user twice in some endpoints, probably it can be resolved with a `decorator` or `interceptor` to validate if the user exists and return an error or continue and add the user to the request object
 
 ## License
 
