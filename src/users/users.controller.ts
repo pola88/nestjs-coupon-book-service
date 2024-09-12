@@ -1,4 +1,4 @@
-import { Controller, Post, Body } from '@nestjs/common';
+import { Controller, Post, Body, Get, Param, UseInterceptors, ClassSerializerInterceptor } from '@nestjs/common';
 import { Public } from 'src/auth/decorators/public.decorator';
 
 import { UsersService } from './users.service';
@@ -12,5 +12,11 @@ export class UsersController {
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
     return this.usersService.create(createUserDto.email);
+  }
+
+  // @UseInterceptors(ClassSerializerInterceptor)
+  @Get(':id')
+  findOne(@Param('id') id: number) {
+    return this.usersService.findUserWithCodes(id);
   }
 }

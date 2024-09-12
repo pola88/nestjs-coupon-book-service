@@ -1,13 +1,15 @@
+const moment = require('moment');
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
+import { Transactional } from 'sequelize-transactional-decorator';
+import { Sequelize, ValidationError, Op } from 'sequelize';
 
+import { parseSequelizeError } from 'src/helper/error';
 import { Coupon } from './entities/coupon.entity';
 import { CreateCouponDto } from './dto/create-coupon.dto';
 import { UpdateCouponDto } from './dto/update-coupon.dto';
 import { Code } from './entities/Code.entity';
-import { Transactional } from 'sequelize-transactional-decorator';
-import { ValidationError } from 'sequelize';
-import { parseSequelizeError } from 'src/helper/error';
+import { User } from 'src/users/entities/user.entity';
 
 @Injectable()
 export class CouponsService {
@@ -30,8 +32,84 @@ export class CouponsService {
     return this.couponRepository.findByPk(id, options);
   }
 
-  assignRandomCode(username: string) {
+  async assignRandomCode(user: User) {
+    const code = await this.codeRepository.findOne({
+      where: {
+        userId: null,
+        redeemed: null,
+        loockedUntil: {
+          [Op.or]: {
+            [Op.lte]: moment().toDate(),
+            [Op.eq]: null
+          }
+        }
+      },
+      order: Sequelize.literal('RANDOM()')
+    });
+    await user.$add('code', code);
+  }
 
+  async assignCode(code: string, user: User) {
+    const _code = await this.codeRepository.findOne({
+      where: {
+        code,
+        userId: null,
+        redeemed: null,
+        loockedUntil: {
+          [Op.or]: {
+            [Op.lte]: moment().toDate(),
+            [Op.eq]: null
+          }
+        }
+      }
+    });
+    if (!_code) {
+      throw new BadRequestException('Code not found');
+    }
+
+    await user.$add('code', _code);
+  }
+
+  async lockCode(code: string, user: User) {
+    const _code = await this.codeRepository.findOne({
+      where: {
+        code,
+        userId: user.id,
+      }
+    });
+
+    if (!_code) {
+      throw new BadRequestException('Code not found or was not assigned to the user');
+    }
+
+    _code.loockedUntil = moment().add(10, 'minutes').toDate();
+    await _code.save();
+  }
+
+  async redeemCode(code: string, user: User) {
+    const _code = await this.codeRepository.findOne({
+      where: {
+        code,
+        userId: user.id,
+        loockedUntil: {
+          [Op.lte]: moment().toDate()
+        }
+      },
+      include: [Coupon]
+    });
+
+    if (!_code) {
+      throw new BadRequestException('Code not found or was not assigned to the user');
+    }
+
+    const canBeRedeemed = await _code.canBeRedeemed();
+    if (canBeRedeemed) {
+      _code.redeemed += 1;
+    } else {
+      throw new BadRequestException('Code was already redeemed');
+    }
+
+    await _code.save();
   }
 
   @Transactional()

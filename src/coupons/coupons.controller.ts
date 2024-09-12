@@ -1,12 +1,16 @@
 import { Controller, Get, Post, Body, Patch, Param, Delete, HttpException, HttpStatus } from '@nestjs/common';
 import { CouponsService } from './coupons.service';
 import { CreateCouponDto } from './dto/create-coupon.dto';
-import { AssignRandomCodeDto } from './dto/assign-random-code.dto';
+import { AssignCodeDto } from './dto/assign-code.dto';
 import { CreateCodesDto } from './dto/create-codes.dto';
+import { UsersService } from 'src/users/users.service';
 
 @Controller('coupons')
 export class CouponsController {
-  constructor(private readonly couponsService: CouponsService) {}
+  constructor(
+    private readonly couponsService: CouponsService,
+    private readonly userService: UsersService,
+  ) {}
 
   @Post()
   create(@Body() createCouponDto: CreateCouponDto) {
@@ -28,8 +32,29 @@ export class CouponsController {
   }
 
   @Post("assign")
-  async assignRandom(@Body() assignRandomCodeDto: AssignRandomCodeDto) {
-    return this.couponsService.assignRandomCode(assignRandomCodeDto.username);
+  async assignRandom(@Body() assignCodeDto: AssignCodeDto) {
+    const user = await this.userService.findOne(assignCodeDto.email);
+    await this.couponsService.assignRandomCode(user);
+    return this.userService.findUserWithCodes(user.id);
+  }
+
+  @Post("assign/:code")
+  async assignCode(@Param('code') code: string, @Body() assignCodeDto: AssignCodeDto) {
+    const user = await this.userService.findOne(assignCodeDto.email);
+    await this.couponsService.assignCode(code, user);
+    return this.userService.findUserWithCodes(user.id);
+  }
+
+  @Post("lock/:code")
+  async lockCode(@Param('code') code: string, @Body() assignCodeDto: AssignCodeDto) {
+    const user = await this.userService.findOne(assignCodeDto.email);
+    await this.couponsService.lockCode(code, user);
+  }
+
+  @Post("redeem/:code")
+  async redeemCode(@Param('code') code: string, @Body() assignCodeDto: AssignCodeDto) {
+    const user = await this.userService.findOne(assignCodeDto.email);
+    await this.couponsService.redeemCode(code, user);
   }
 
   @Get()
@@ -42,13 +67,4 @@ export class CouponsController {
     return this.couponsService.findOne(+id);
   }
 
-  // @Patch(':id')
-  // update(@Param('id') id: string, @Body() updateCouponDto: UpdateCouponDto) {
-  //   return this.couponsService.update(+id, updateCouponDto);
-  // }
-
-  // @Delete(':id')
-  // remove(@Param('id') id: string) {
-  //   return this.couponsService.remove(+id);
-  // }
 }

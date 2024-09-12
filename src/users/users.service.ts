@@ -1,8 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectModel } from '@nestjs/sequelize';
-import bcrypt from 'bcrypt';
+import { instanceToPlain } from 'class-transformer';
 
 import { User } from './entities/user.entity';
+import { Code } from 'src/coupons/entities/Code.entity';
 
 
 @Injectable()
@@ -22,5 +23,9 @@ export class UsersService {
     return this.userRepository.create({
       email, password,
     })
+  }
+
+  findUserWithCodes(id: number) {
+    return this.userRepository.findByPk(id, { include: [Code] });
   }
 }

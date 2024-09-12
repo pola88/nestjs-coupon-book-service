@@ -1,4 +1,4 @@
-import { Column, Table, Model, HasMany } from 'sequelize-typescript';
+import { Column, Table, Model, HasMany, Default } from 'sequelize-typescript';
 import { Code } from './Code.entity';
 
 @Table({
@@ -10,4 +10,8 @@ export class Coupon extends Model {
 
   @HasMany(() => Code)
   codes: Code[];
+
+  @Default(1)
+  @Column
+  redeemedAmount: number;
 }

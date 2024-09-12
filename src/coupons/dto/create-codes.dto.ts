@@ -1,5 +1,5 @@
 import { IsArray, IsInt, ValidateIf, IsString, Validate } from 'class-validator';
-import { CodeLength } from './code-length';
+import { CodeLength } from '../validators/code-length.validator';
 
 export class CreateCodesDto {
 
